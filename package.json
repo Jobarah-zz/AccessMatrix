@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/Jobarah/AccessMatrix/issues"
   },
-  "homepage": "https://github.com/Jobarah/AccessMatrix#readme"
+  "homepage": "https://github.com/Jobarah/AccessMatrix#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^2.4.1"
+  }
 }
