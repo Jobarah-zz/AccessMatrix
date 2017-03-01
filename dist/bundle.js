@@ -14,9 +14,15 @@ var Matrix = function () {
 
 		this.matrix = new Array();
 		this.matrix.push(new Array());
+		this.init();
 	}
 
 	_createClass(Matrix, [{
+		key: 'init',
+		value: function init() {
+			this.addDomain('admin');
+		}
+	}, {
 		key: 'addObject',
 		value: function addObject(object) {
 			this.matrix[0].push(object);
@@ -24,6 +30,7 @@ var Matrix = function () {
 	}, {
 		key: 'addDomain',
 		value: function addDomain(domain) {
+
 			var newDomain = new Array();
 			newDomain.push(domain);
 			this.matrix[0].map(function () {
@@ -32,8 +39,34 @@ var Matrix = function () {
 			this.matrix.push(newDomain);
 		}
 	}, {
-		key: 'getDomainPermissions',
-		value: function getDomainPermissions() {}
+		key: 'getDomainPermissionsOnObject',
+		value: function getDomainPermissionsOnObject(domain, object) {
+
+			var domainIndex = this.getDomainIndex(domain);
+			var objectIndex = this.getObjectIndex(object);
+
+			console.log(this.matrix[domainIndex][objectIndex]);
+		}
+	}, {
+		key: 'getDomainIndex',
+		value: function getDomainIndex(domain) {
+
+			this.matrix.map(function (item, index) {
+				if (item[0] == domain) return index;
+			});
+
+			return -1;
+		}
+	}, {
+		key: 'getObjectIndex',
+		value: function getObjectIndex(object) {
+
+			this.matrix[0].map(function (item, index) {
+				if (item[0] == object) return index;
+			});
+
+			return -1;
+		}
 	}, {
 		key: 'printMatrix',
 		value: function printMatrix() {
@@ -59,6 +92,10 @@ AccessControlMatrix.addDomain('daniel');
 AccessControlMatrix.addDomain('victor');
 AccessControlMatrix.addDomain('jesus');
 AccessControlMatrix.addDomain('alex');
+
+AccessControlMatrix.getDomainPermissionsOnObject('josue', 'oa');
+
+AccessControlMatrix.getDomainPermissionsOnObject('josue', 0);
 
 AccessControlMatrix.printMatrix();
 //# sourceMappingURL=bundle.js.map
