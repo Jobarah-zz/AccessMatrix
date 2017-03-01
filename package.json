@@ -1,0 +1,19 @@
+{
+  "name": "access-matrix",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jobarah/AccessMatrix.git"
+  },
+  "author": "Jobarah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jobarah/AccessMatrix/issues"
+  },
+  "homepage": "https://github.com/Jobarah/AccessMatrix#readme"
+}
