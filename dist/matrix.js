@@ -1,29 +1,5 @@
 'use strict';
 
-var _matrix = require('/.matrix');
-
-var _matrix2 = _interopRequireDefault(_matrix);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AccessControlMatrix = new _matrix2.default();
-
-AccessControlMatrix.addObject(0);
-AccessControlMatrix.addObject(1);
-AccessControlMatrix.addObject(2);
-AccessControlMatrix.addObject(3);
-
-AccessControlMatrix.addDomain('josue');
-AccessControlMatrix.addDomain('daniel');
-AccessControlMatrix.addDomain('victor');
-AccessControlMatrix.addDomain('jesus');
-AccessControlMatrix.addDomain('alex');
-
-AccessControlMatrix.getDomainPermissionsForObject('josue', 2);
-
-AccessControlMatrix.printMatrix();
-'use strict';
-
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -102,4 +78,4 @@ var Matrix = function () {
 }();
 
 exports.default = Matrix;
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=matrix.js.map
