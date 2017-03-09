@@ -4,6 +4,9 @@ export default class Matrix {
 
 		this.matrix = new Array();
 		this.matrix.push(new Array());
+		this.previousDomains = new Array();
+		addObject('admin');
+		this.activeDomain = 'admin';
 	}
 
 	addObject(object) {
@@ -50,6 +53,15 @@ export default class Matrix {
 		});
 
 		return retIndex;
+	}
+	
+	setDomain(domain) {
+		this.activeDomain = domain;
+	}
+
+	switchDomain(domain) {
+		this.previousDomains.push(domain);
+		this.activeDomain = domain;
 	}
 
 	printMatrix() {

@@ -30,19 +30,35 @@ var Shell = function () {
 	_createClass(Shell, [{
 		key: 'readCommand',
 		value: function readCommand() {
-
 			var command = _readlineSync2.default.question('Command: ');
 			var args = command.split(' ');
 		}
 	}, {
 		key: 'ls',
-		value: function ls(path) {
+		value: function ls() {
+
 			_fs2.default.readdir(__dirname, function (err, files) {
 				if (err) return;
 				files.map(function (item) {
 					console.log(item);
 				});
 			});
+		}
+	}, {
+		key: 'pwd',
+		value: function pwd() {
+
+			console.log(process.cwd());
+		}
+	}, {
+		key: 'mkdir',
+		value: function mkdir(dirname) {
+			_fs2.default.mkdirSync(dirname);
+		}
+	}, {
+		key: 'touch',
+		value: function touch(filename) {
+			_fs2.default.closeSync(_fs2.default.openSync(filename, 'w'));
 		}
 	}]);
 
@@ -54,5 +70,6 @@ exports.default = Shell;
 
 var AccessControlMatrix = new Shell();
 
-AccessControlMatrix.ls('oa');
+//AccessControlMatrix.ls('oa');
+AccessControlMatrix.touch('oa');
 //# sourceMappingURL=main.js.map
