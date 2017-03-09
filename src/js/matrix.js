@@ -5,7 +5,7 @@ export default class Matrix {
 		this.matrix = new Array();
 		this.matrix.push(new Array());
 		this.previousDomains = new Array();
-		addObject('admin');
+		this.addObject('admin');
 		this.activeDomain = 'admin';
 	}
 
@@ -60,7 +60,8 @@ export default class Matrix {
 	}
 
 	switchDomain(domain) {
-		this.previousDomains.push(domain);
+		if (this.previousDomains[this.previousDomains-2] !== domain)
+			this.previousDomains.push(domain);
 		this.activeDomain = domain;
 	}
 
