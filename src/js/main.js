@@ -4,47 +4,43 @@ import Matrix from './matrix';
 
 export default class Shell {
 
+	constructor() {
+		this.accessControlMatrix = new Matrix();
+	}
 	readCommand() {
-		let command = readlineSync.question('Command: ');
-		let args = command.split(' ');
+		let command = readlineSync.question(`$${this.accessControlMatrix.getActiveDomain()}: `);
+		return command.split(' ');
 	}
 
-	ls() {
+	ls() {}
 
-		fs.readdir(__dirname, function(err, files) {
-		    if (err) return;
-			files.map((item) => {
-				console.log(item);
-			})
+	pwd() {}
+
+	mkdir(dirname) {}
+
+	touch(filename) {}
+
+	rm(filename) {}
+
+	rmdir(dirname) {}
+
+	run() {
+		readlineSync.promptCLLoop({
+		  	add: function(target, into) {
+		    	console.log(target + ' is added into ' + into + '.');
+		   		// Do something... 
+			},
+			remove: function(target) {
+		    	console.log(target + ' is removed.');
+		    	// Do something... 
+			},
+			bye: function() { return true; },
+			ls: () => {console.log(this.accessControlMatrix.getActiveDomainObjects())}
 		});
-	}
-
-	pwd() {
-
-		console.log(process.cwd());
-	}
-
-	mkdir(dirname) {
-
-		fs.mkdirSync(dirname);
-	}
-
-	touch(filename) {
-		
-		fs.closeSync(fs.openSync(filename, 'w'));
-	}
-
-	rm(filename) {
-
-	}
-
-	rmdir(dirname) {
-
-		fs.rmdir(dirname);
+		console.log('Exited');
 	}
 }
 
-let AccessControlMatrix = new Shell();
+let userShell = new Shell();
 
-//AccessControlMatrix.ls('oa');
-AccessControlMatrix.touch('oa');
+userShell.run();

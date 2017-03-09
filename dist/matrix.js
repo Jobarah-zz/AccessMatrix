@@ -14,6 +14,9 @@ var Matrix = function () {
 
 		this.matrix = new Array();
 		this.matrix.push(new Array());
+		this.previousDomains = new Array();
+		this.addObject('admin');
+		this.activeDomain = 'admin';
 	}
 
 	_createClass(Matrix, [{
@@ -66,6 +69,22 @@ var Matrix = function () {
 			});
 
 			return retIndex;
+		}
+	}, {
+		key: 'setDomain',
+		value: function setDomain(domain) {
+			this.activeDomain = domain;
+		}
+	}, {
+		key: 'getActiveDomain',
+		value: function getActiveDomain() {
+			return this.activeDomain;
+		}
+	}, {
+		key: 'switchDomain',
+		value: function switchDomain(domain) {
+			if (this.previousDomains[this.previousDomains - 2] === domain) this.previousDomains.pop();else this.previousDomains.push(domain);
+			this.activeDomain = domain;
 		}
 	}, {
 		key: 'printMatrix',

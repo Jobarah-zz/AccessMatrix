@@ -36,7 +36,7 @@ export default class Matrix {
 		let retIndex = -1;
 
 		this.matrix.map((item, index) => {
-			if(item[0] == domain)
+			if (item[0] == domain)
 				retIndex = index;
 		});
 
@@ -59,8 +59,23 @@ export default class Matrix {
 		this.activeDomain = domain;
 	}
 
+	getActiveDomain() {
+		return this.activeDomain;
+	}
+
+	getActiveDomainObjects() {
+
+		const index = getDomainIndex(this.activeDomain);
+		const domains = this.matrix[index].map((item) => {
+
+			let permissions = this.getDomainPermissionsForObject(this.activeDomain, item);
+		})
+	}
+
 	switchDomain(domain) {
-		if (this.previousDomains[this.previousDomains-2] !== domain)
+		if (this.previousDomains[this.previousDomains-2] === domain)
+			this.previousDomains.pop();
+		else
 			this.previousDomains.push(domain);
 		this.activeDomain = domain;
 	}
