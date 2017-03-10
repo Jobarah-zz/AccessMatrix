@@ -15,7 +15,8 @@ var Matrix = function () {
 		this.matrix = new Array();
 		this.matrix.push(new Array());
 		this.previousDomains = new Array();
-		this.addObject('admin');
+		console.log(this.matrix);
+		this.addDomain('admin');
 		this.activeDomain = 'admin';
 	}
 
@@ -23,7 +24,17 @@ var Matrix = function () {
 		key: 'addObject',
 		value: function addObject(object) {
 
+			var domainIndex = this.getDomainIndex(this.getActiveDomain());
+
 			this.matrix[0].push(object);
+
+			var objectIndex = this.getObjectIndex(object);
+
+			this.matrix.map(function (domain, index) {
+				if (index > 0) {
+					if (index === domainIndex || domain[0] === 'admin') domain.push('rwx');else domain.push('-');
+				}
+			});
 		}
 	}, {
 		key: 'addDomain',
@@ -36,6 +47,7 @@ var Matrix = function () {
 				return newDomain.push('-');
 			});
 			this.matrix.push(newDomain);
+			console.log(this.matrix);
 		}
 	}, {
 		key: 'getDomainPermissionsForObject',
@@ -71,8 +83,8 @@ var Matrix = function () {
 			return retIndex;
 		}
 	}, {
-		key: 'setDomain',
-		value: function setDomain(domain) {
+		key: 'setActiveDomain',
+		value: function setActiveDomain(domain) {
 			this.activeDomain = domain;
 		}
 	}, {
@@ -81,10 +93,22 @@ var Matrix = function () {
 			return this.activeDomain;
 		}
 	}, {
+		key: 'getActiveDomainObjects',
+		value: function getActiveDomainObjects() {
+			var _this = this;
+
+			var index = getDomainIndex(this.activeDomain);
+			var domains = this.matrix[index].map(function (item) {
+
+				var permissions = _this.getDomainPermissionsForObject(_this.activeDomain, item);
+			});
+		}
+	}, {
 		key: 'switchDomain',
 		value: function switchDomain(domain) {
-			if (this.previousDomains[this.previousDomains - 2] === domain) this.previousDomains.pop();else this.previousDomains.push(domain);
+			if (this.previousDomains[this.previousDomains - 2] === domain) this.previousDomains.pop();else this.previousDomains.push(this.getActiveDomain());
 			this.activeDomain = domain;
+			console.log(this.previousDomains);
 		}
 	}, {
 		key: 'printMatrix',

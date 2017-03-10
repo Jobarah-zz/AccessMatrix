@@ -5,13 +5,27 @@ export default class Matrix {
 		this.matrix = new Array();
 		this.matrix.push(new Array());
 		this.previousDomains = new Array();
-		this.addObject('admin');
+		console.log(this.matrix);
+		this.addDomain('admin');
 		this.activeDomain = 'admin';
 	}
 
 	addObject(object) {
 
+		let domainIndex = this.getDomainIndex(this.getActiveDomain());
+
 		this.matrix[0].push(object);
+
+		let objectIndex = this.getObjectIndex(object);
+
+		this.matrix.map((domain, index) => {
+			if (index > 0) {
+				if(index === domainIndex || domain[0] === 'admin')
+					domain.push('rwx');
+				else
+					domain.push('-');
+			}
+		});
 	}
 
 	addDomain(domain) {
@@ -21,6 +35,7 @@ export default class Matrix {
 		newDomain.push(domain);
 		this.matrix[0].map(() => newDomain.push('-'));
 		this.matrix.push(newDomain);
+		console.log(this.matrix);
 	}
 
 	getDomainPermissionsForObject(domain, object) {
@@ -55,7 +70,7 @@ export default class Matrix {
 		return retIndex;
 	}
 	
-	setDomain(domain) {
+	setActiveDomain(domain) {
 		this.activeDomain = domain;
 	}
 
@@ -76,8 +91,9 @@ export default class Matrix {
 		if (this.previousDomains[this.previousDomains-2] === domain)
 			this.previousDomains.pop();
 		else
-			this.previousDomains.push(domain);
+			this.previousDomains.push(this.getActiveDomain());
 		this.activeDomain = domain;
+		console.log(this.previousDomains);
 	}
 
 	printMatrix() {

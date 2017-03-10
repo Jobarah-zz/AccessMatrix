@@ -16,26 +16,53 @@ export default class Shell {
 
 	pwd() {}
 
-	mkdir(dirname) {}
+	mkdir(dirname) {
+		this.accessControlMatrix.addObject(dirname);
+	}
 
-	touch(filename) {}
+	touch(filename) {
+		this.accessControlMatrix.addObject(filename);
+	}
 
-	rm(filename) {}
+	rm(filename) {
+		this.accessControlMatrix.removeObject(filename);
+	}
 
-	rmdir(dirname) {}
+	rmdir(dirname) {
+		this.accessControlMatrix.removeObject(filename);
+	}
+
+	useradd(username) {
+		this.accessControlMatrix.addDomain(username);
+	}
+
+	su(username) {
+		this.accessControlMatrix.switchDomain(username);		
+	}
 
 	run() {
+
 		readlineSync.promptCLLoop({
-		  	add: function(target, into) {
-		    	console.log(target + ' is added into ' + into + '.');
-		   		// Do something... 
+		  	touch: (target) => {
+
+		    	this.touch(target);
 			},
-			remove: function(target) {
+			remove: (target) => {
+
 		    	console.log(target + ' is removed.');
-		    	// Do something... 
 			},
-			bye: function() { return true; },
-			ls: () => {console.log(this.accessControlMatrix.getActiveDomainObjects())}
+			useradd: (username) => { 
+				this.accessControlMatrix.addDomain(username);
+			},
+			su: (username) => {
+				this.su(username);
+			},
+			printMatrix: () => {
+				this.accessControlMatrix.printMatrix();
+			},
+			exit: function() { 
+				return true; 
+			}
 		});
 		console.log('Exited');
 	}

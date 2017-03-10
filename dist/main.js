@@ -43,35 +43,59 @@ var Shell = function () {
 		value: function pwd() {}
 	}, {
 		key: 'mkdir',
-		value: function mkdir(dirname) {}
+		value: function mkdir(dirname) {
+			this.accessControlMatrix.addObject(dirname);
+		}
 	}, {
 		key: 'touch',
-		value: function touch(filename) {}
+		value: function touch(filename) {
+			this.accessControlMatrix.addObject(filename);
+		}
 	}, {
 		key: 'rm',
-		value: function rm(filename) {}
+		value: function rm(filename) {
+			this.accessControlMatrix.removeObject(filename);
+		}
 	}, {
 		key: 'rmdir',
-		value: function rmdir(dirname) {}
+		value: function rmdir(dirname) {
+			this.accessControlMatrix.removeObject(filename);
+		}
+	}, {
+		key: 'useradd',
+		value: function useradd(username) {
+			this.accessControlMatrix.addDomain(username);
+		}
+	}, {
+		key: 'su',
+		value: function su(username) {
+			this.accessControlMatrix.switchDomain(username);
+		}
 	}, {
 		key: 'run',
 		value: function run() {
 			var _this = this;
 
 			_readlineSync2.default.promptCLLoop({
-				add: function add(target, into) {
-					console.log(target + ' is added into ' + into + '.');
-					// Do something... 
+				touch: function touch(target) {
+
+					_this.touch(target);
 				},
 				remove: function remove(target) {
+
 					console.log(target + ' is removed.');
-					// Do something... 
 				},
-				bye: function bye() {
+				useradd: function useradd(username) {
+					_this.accessControlMatrix.addDomain(username);
+				},
+				su: function su(username) {
+					_this.su(username);
+				},
+				printMatrix: function printMatrix() {
+					_this.accessControlMatrix.printMatrix();
+				},
+				exit: function exit() {
 					return true;
-				},
-				ls: function ls() {
-					console.log(_this.accessControlMatrix.getActiveDomainObjects());
 				}
 			});
 			console.log('Exited');
