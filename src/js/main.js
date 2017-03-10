@@ -24,12 +24,26 @@ export default class Shell {
 		this.accessControlMatrix.addObject(filename);
 	}
 
-	rm(filename) {
-		this.accessControlMatrix.removeObject(filename);
+	read(filename) {
+		
+		let permissions = this.accessControlMatrix.getDomainPermissionsForObject(filename);
+
+		if (permissions.includes('r')) {
+			console.log(true);
+			return;
+		}
+		console.log(false);
 	}
 
-	rmdir(dirname) {
-		this.accessControlMatrix.removeObject(filename);
+	edit(filename) {
+		
+		let permissions = this.accessControlMatrix.getDomainPermissionsForObject(filename);
+
+		if (permissions.includes('w')) {
+			console.log(true);
+			return;
+		}
+		console.log(false);
 	}
 
 	useradd(username) {
@@ -47,16 +61,19 @@ export default class Shell {
 
 		    	this.touch(target);
 			},
-			remove: (target) => {
-
-		    	console.log(target + ' is removed.');
-			},
 			useradd: (username) => { 
-				this.accessControlMatrix.addDomain(username);
+				this.useradd(username);
 			},
 			su: (username) => {
 				this.su(username);
 			},
+			edit: (filename) => {
+				this.edit(filename);
+			},
+			read: (filename) => {
+				this.read(filename);
+			}
+			,
 			printMatrix: () => {
 				this.accessControlMatrix.printMatrix();
 			},

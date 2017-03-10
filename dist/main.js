@@ -52,14 +52,28 @@ var Shell = function () {
 			this.accessControlMatrix.addObject(filename);
 		}
 	}, {
-		key: 'rm',
-		value: function rm(filename) {
-			this.accessControlMatrix.removeObject(filename);
+		key: 'read',
+		value: function read(filename) {
+
+			var permissions = this.accessControlMatrix.getDomainPermissionsForObject(filename);
+
+			if (permissions.includes('r')) {
+				console.log(true);
+				return;
+			}
+			console.log(false);
 		}
 	}, {
-		key: 'rmdir',
-		value: function rmdir(dirname) {
-			this.accessControlMatrix.removeObject(filename);
+		key: 'edit',
+		value: function edit(filename) {
+
+			var permissions = this.accessControlMatrix.getDomainPermissionsForObject(filename);
+
+			if (permissions.includes('w')) {
+				console.log(true);
+				return;
+			}
+			console.log(false);
 		}
 	}, {
 		key: 'useradd',
@@ -81,16 +95,19 @@ var Shell = function () {
 
 					_this.touch(target);
 				},
-				remove: function remove(target) {
-
-					console.log(target + ' is removed.');
-				},
 				useradd: function useradd(username) {
-					_this.accessControlMatrix.addDomain(username);
+					_this.useradd(username);
 				},
 				su: function su(username) {
 					_this.su(username);
 				},
+				edit: function edit(filename) {
+					_this.edit(filename);
+				},
+				read: function read(filename) {
+					_this.read(filename);
+				},
+
 				printMatrix: function printMatrix() {
 					_this.accessControlMatrix.printMatrix();
 				},

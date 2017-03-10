@@ -15,7 +15,6 @@ var Matrix = function () {
 		this.matrix = new Array();
 		this.matrix.push(new Array());
 		this.previousDomains = new Array();
-		console.log(this.matrix);
 		this.addDomain('admin');
 		this.activeDomain = 'admin';
 	}
@@ -27,8 +26,6 @@ var Matrix = function () {
 			var domainIndex = this.getDomainIndex(this.getActiveDomain());
 
 			this.matrix[0].push(object);
-
-			var objectIndex = this.getObjectIndex(object);
 
 			this.matrix.map(function (domain, index) {
 				if (index > 0) {
@@ -47,16 +44,25 @@ var Matrix = function () {
 				return newDomain.push('-');
 			});
 			this.matrix.push(newDomain);
-			console.log(this.matrix);
 		}
 	}, {
 		key: 'getDomainPermissionsForObject',
-		value: function getDomainPermissionsForObject(domain, object) {
+		value: function getDomainPermissionsForObject(object) {
 
-			var domainIndex = this.getDomainIndex(domain);
+			var domainIndex = this.getDomainIndex(this.getActiveDomain());
 			var objectIndex = this.getObjectIndex(object);
+			var permissions = this.matrix[domainIndex][objectIndex + 1];
+			var previousDomainPermissions = this.previousDomains[this.previousDomains.length - 1];
 
-			return this.matrix[domainIndex][objectIndex];
+			if (previousDomainPermissions) {
+				permissions += previousDomainPermissions;
+			}
+
+			permissions.split("").filter(function (x, n, s) {
+				return s.indexOf(x) == n;
+			}).join("");
+
+			return permissions;
 		}
 	}, {
 		key: 'getDomainIndex',
@@ -77,7 +83,9 @@ var Matrix = function () {
 			var retIndex = -1;
 
 			this.matrix[0].map(function (item, index) {
-				if (item == object) retIndex = index;
+				if (item == object) {
+					retIndex = index;
+				}
 			});
 
 			return retIndex;
@@ -93,22 +101,10 @@ var Matrix = function () {
 			return this.activeDomain;
 		}
 	}, {
-		key: 'getActiveDomainObjects',
-		value: function getActiveDomainObjects() {
-			var _this = this;
-
-			var index = getDomainIndex(this.activeDomain);
-			var domains = this.matrix[index].map(function (item) {
-
-				var permissions = _this.getDomainPermissionsForObject(_this.activeDomain, item);
-			});
-		}
-	}, {
 		key: 'switchDomain',
 		value: function switchDomain(domain) {
-			if (this.previousDomains[this.previousDomains - 2] === domain) this.previousDomains.pop();else this.previousDomains.push(this.getActiveDomain());
+			if (this.previousDomains[this.previousDomains.length - 1] === domain) this.previousDomains.pop();else this.previousDomains.push(this.getActiveDomain());
 			this.activeDomain = domain;
-			console.log(this.previousDomains);
 		}
 	}, {
 		key: 'printMatrix',

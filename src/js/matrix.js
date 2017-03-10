@@ -5,7 +5,6 @@ export default class Matrix {
 		this.matrix = new Array();
 		this.matrix.push(new Array());
 		this.previousDomains = new Array();
-		console.log(this.matrix);
 		this.addDomain('admin');
 		this.activeDomain = 'admin';
 	}
@@ -15,8 +14,6 @@ export default class Matrix {
 		let domainIndex = this.getDomainIndex(this.getActiveDomain());
 
 		this.matrix[0].push(object);
-
-		let objectIndex = this.getObjectIndex(object);
 
 		this.matrix.map((domain, index) => {
 			if (index > 0) {
@@ -35,15 +32,22 @@ export default class Matrix {
 		newDomain.push(domain);
 		this.matrix[0].map(() => newDomain.push('-'));
 		this.matrix.push(newDomain);
-		console.log(this.matrix);
 	}
 
-	getDomainPermissionsForObject(domain, object) {
+	getDomainPermissionsForObject(object) {
 
-		const domainIndex = this.getDomainIndex(domain);
+		const domainIndex = this.getDomainIndex(this.getActiveDomain());
 		const objectIndex = this.getObjectIndex(object);
+		let permissions = this.matrix[domainIndex][objectIndex+1];
+		let previousDomainPermissions = this.previousDomains[this.previousDomains.length-1];
 
-		return this.matrix[domainIndex][objectIndex];
+		if (previousDomainPermissions) {
+			permissions += previousDomainPermissions;
+		}
+
+		permissions.split("").filter(function(x, n, s) { return s.indexOf(x) == n }).join("");
+
+		return permissions;
 	}
 
 	getDomainIndex(domain) {
@@ -63,8 +67,9 @@ export default class Matrix {
 		let retIndex = -1;
 
 		this.matrix[0].map((item, index) => {
-			if (item == object)
+			if (item == object) {
 				retIndex = index;
+			}
 		});
 
 		return retIndex;
@@ -78,22 +83,12 @@ export default class Matrix {
 		return this.activeDomain;
 	}
 
-	getActiveDomainObjects() {
-
-		const index = getDomainIndex(this.activeDomain);
-		const domains = this.matrix[index].map((item) => {
-
-			let permissions = this.getDomainPermissionsForObject(this.activeDomain, item);
-		})
-	}
-
 	switchDomain(domain) {
-		if (this.previousDomains[this.previousDomains-2] === domain)
+		if (this.previousDomains[this.previousDomains.length-1] === domain)
 			this.previousDomains.pop();
 		else
 			this.previousDomains.push(this.getActiveDomain());
 		this.activeDomain = domain;
-		console.log(this.previousDomains);
 	}
 
 	printMatrix() {
