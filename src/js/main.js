@@ -39,11 +39,7 @@ export default class Shell {
 		
 		let permissions = this.accessControlMatrix.getDomainPermissionsForObject(filename);
 
-		if (permissions.includes('w')) {
-			console.log(true);
-			return;
-		}
-		console.log(false);
+		console.log(permissions);
 	}
 
 	useradd(username) {
@@ -58,6 +54,10 @@ export default class Shell {
 
 		readlineSync.promptCLLoop({
 		  	touch: (target) => {
+
+		    	this.touch(target);
+			},
+			mkdir: (target) => {
 
 		    	this.touch(target);
 			},
@@ -79,6 +79,9 @@ export default class Shell {
 			},
 			exit: function() { 
 				return true; 
+			},
+			grantPermission: (username, object, permissions) => {
+				this.accessControlMatrix.grantPermission(username, object, permissions);
 			}
 		});
 		console.log('Exited');

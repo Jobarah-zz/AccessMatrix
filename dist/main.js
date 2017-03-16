@@ -69,11 +69,7 @@ var Shell = function () {
 
 			var permissions = this.accessControlMatrix.getDomainPermissionsForObject(filename);
 
-			if (permissions.includes('w')) {
-				console.log(true);
-				return;
-			}
-			console.log(false);
+			console.log(permissions);
 		}
 	}, {
 		key: 'useradd',
@@ -95,6 +91,10 @@ var Shell = function () {
 
 					_this.touch(target);
 				},
+				mkdir: function mkdir(target) {
+
+					_this.touch(target);
+				},
 				useradd: function useradd(username) {
 					_this.useradd(username);
 				},
@@ -113,6 +113,9 @@ var Shell = function () {
 				},
 				exit: function exit() {
 					return true;
+				},
+				grantPermission: function grantPermission(username, object, permissions) {
+					_this.accessControlMatrix.grantPermission(username, object, permissions);
 				}
 			});
 			console.log('Exited');

@@ -39,7 +39,8 @@ export default class Matrix {
 		const domainIndex = this.getDomainIndex(this.getActiveDomain());
 		const objectIndex = this.getObjectIndex(object);
 		let permissions = this.matrix[domainIndex][objectIndex+1];
-		let previousDomainPermissions = this.previousDomains[this.previousDomains.length-1];
+		let previousDomainIndex = this.getDomainIndex(this.previousDomains[this.previousDomains.length-1]);
+		let previousDomainPermissions = this.matrix[previousDomainIndex][objectIndex+1];
 
 		if (previousDomainPermissions) {
 			permissions += previousDomainPermissions;
@@ -89,6 +90,12 @@ export default class Matrix {
 		else
 			this.previousDomains.push(this.getActiveDomain());
 		this.activeDomain = domain;
+	}
+
+	grantPermission(username, object, permissions) {
+		let objectIndex = this.getObjectIndex(object);
+		let domainIndex = this.getDomainIndex(username);
+		this.matrix[domainIndex][objectIndex+1] = permissions;
 	}
 
 	printMatrix() {

@@ -52,7 +52,8 @@ var Matrix = function () {
 			var domainIndex = this.getDomainIndex(this.getActiveDomain());
 			var objectIndex = this.getObjectIndex(object);
 			var permissions = this.matrix[domainIndex][objectIndex + 1];
-			var previousDomainPermissions = this.previousDomains[this.previousDomains.length - 1];
+			var previousDomainIndex = this.getDomainIndex(this.previousDomains[this.previousDomains.length - 1]);
+			var previousDomainPermissions = this.matrix[previousDomainIndex][objectIndex + 1];
 
 			if (previousDomainPermissions) {
 				permissions += previousDomainPermissions;
@@ -105,6 +106,13 @@ var Matrix = function () {
 		value: function switchDomain(domain) {
 			if (this.previousDomains[this.previousDomains.length - 1] === domain) this.previousDomains.pop();else this.previousDomains.push(this.getActiveDomain());
 			this.activeDomain = domain;
+		}
+	}, {
+		key: 'grantPermission',
+		value: function grantPermission(username, object, permissions) {
+			var objectIndex = this.getObjectIndex(object);
+			var domainIndex = this.getDomainIndex(username);
+			this.matrix[domainIndex][objectIndex + 1] = permissions;
 		}
 	}, {
 		key: 'printMatrix',
