@@ -1,29 +1,5 @@
 'use strict';
 
-var _matrix = require('/.matrix');
-
-var _matrix2 = _interopRequireDefault(_matrix);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AccessControlMatrix = new _matrix2.default();
-
-AccessControlMatrix.addObject(0);
-AccessControlMatrix.addObject(1);
-AccessControlMatrix.addObject(2);
-AccessControlMatrix.addObject(3);
-
-AccessControlMatrix.addDomain('josue');
-AccessControlMatrix.addDomain('daniel');
-AccessControlMatrix.addDomain('victor');
-AccessControlMatrix.addDomain('jesus');
-AccessControlMatrix.addDomain('alex');
-
-AccessControlMatrix.getDomainPermissionsForObject('josue', 2);
-
-AccessControlMatrix.printMatrix();
-'use strict';
-
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -38,13 +14,24 @@ var Matrix = function () {
 
 		this.matrix = new Array();
 		this.matrix.push(new Array());
+		this.previousDomains = new Array();
+		this.addDomain('admin');
+		this.activeDomain = 'admin';
 	}
 
 	_createClass(Matrix, [{
 		key: 'addObject',
 		value: function addObject(object) {
 
+			var domainIndex = this.getDomainIndex(this.getActiveDomain());
+
 			this.matrix[0].push(object);
+
+			this.matrix.map(function (domain, index) {
+				if (index > 0) {
+					if (index === domainIndex || domain[0] === 'admin') domain.push('rwx');else domain.push('-');
+				}
+			});
 		}
 	}, {
 		key: 'addDomain',
@@ -60,12 +47,23 @@ var Matrix = function () {
 		}
 	}, {
 		key: 'getDomainPermissionsForObject',
-		value: function getDomainPermissionsForObject(domain, object) {
+		value: function getDomainPermissionsForObject(object) {
 
-			var domainIndex = this.getDomainIndex(domain);
+			var domainIndex = this.getDomainIndex(this.getActiveDomain());
 			var objectIndex = this.getObjectIndex(object);
+			var permissions = this.matrix[domainIndex][objectIndex + 1];
+			var previousDomainIndex = this.getDomainIndex(this.previousDomains[this.previousDomains.length - 1]);
+			var previousDomainPermissions = this.matrix[previousDomainIndex][objectIndex + 1];
 
-			return this.matrix[domainIndex][objectIndex];
+			if (previousDomainPermissions) {
+				permissions += previousDomainPermissions;
+			}
+
+			permissions.split("").filter(function (x, n, s) {
+				return s.indexOf(x) == n;
+			}).join("");
+
+			return permissions;
 		}
 	}, {
 		key: 'getDomainIndex',
@@ -86,10 +84,35 @@ var Matrix = function () {
 			var retIndex = -1;
 
 			this.matrix[0].map(function (item, index) {
-				if (item == object) retIndex = index;
+				if (item == object) {
+					retIndex = index;
+				}
 			});
 
 			return retIndex;
+		}
+	}, {
+		key: 'setActiveDomain',
+		value: function setActiveDomain(domain) {
+			this.activeDomain = domain;
+		}
+	}, {
+		key: 'getActiveDomain',
+		value: function getActiveDomain() {
+			return this.activeDomain;
+		}
+	}, {
+		key: 'switchDomain',
+		value: function switchDomain(domain) {
+			if (this.previousDomains[this.previousDomains.length - 1] === domain) this.previousDomains.pop();else this.previousDomains.push(this.getActiveDomain());
+			this.activeDomain = domain;
+		}
+	}, {
+		key: 'grantPermission',
+		value: function grantPermission(username, object, permissions) {
+			var objectIndex = this.getObjectIndex(object);
+			var domainIndex = this.getDomainIndex(username);
+			this.matrix[domainIndex][objectIndex + 1] = permissions;
 		}
 	}, {
 		key: 'printMatrix',
@@ -102,4 +125,4 @@ var Matrix = function () {
 }();
 
 exports.default = Matrix;
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=matrix.js.map

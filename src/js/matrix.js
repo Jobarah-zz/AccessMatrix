@@ -1,40 +1,104 @@
 export default class Matrix {
+	
 	constructor() {
+
 		this.matrix = new Array();
 		this.matrix.push(new Array());
+		this.previousDomains = new Array();
+		this.addDomain('admin');
+		this.activeDomain = 'admin';
 	}
 
 	addObject(object) {
+
+		let domainIndex = this.getDomainIndex(this.getActiveDomain());
+
 		this.matrix[0].push(object);
+
+		this.matrix.map((domain, index) => {
+			if (index > 0) {
+				if(index === domainIndex || domain[0] === 'admin')
+					domain.push('rwx');
+				else
+					domain.push('-');
+			}
+		});
 	}
 
 	addDomain(domain) {
+
 		let newDomain = new Array();
+
 		newDomain.push(domain);
 		this.matrix[0].map(() => newDomain.push('-'));
 		this.matrix.push(newDomain);
 	}
 
-	getDomainPermissions() {
+	getDomainPermissionsForObject(object) {
 
+		const domainIndex = this.getDomainIndex(this.getActiveDomain());
+		const objectIndex = this.getObjectIndex(object);
+		let permissions = this.matrix[domainIndex][objectIndex+1];
+		let previousDomainIndex = this.getDomainIndex(this.previousDomains[this.previousDomains.length-1]);
+		let previousDomainPermissions = this.matrix[previousDomainIndex][objectIndex+1];
+
+		if (previousDomainPermissions) {
+			permissions += previousDomainPermissions;
+		}
+
+		permissions.split("").filter(function(x, n, s) { return s.indexOf(x) == n }).join("");
+
+		return permissions;
+	}
+
+	getDomainIndex(domain) {
+
+		let retIndex = -1;
+
+		this.matrix.map((item, index) => {
+			if (item[0] == domain)
+				retIndex = index;
+		});
+
+		return retIndex;
+	}
+
+	getObjectIndex(object) {
+
+		let retIndex = -1;
+
+		this.matrix[0].map((item, index) => {
+			if (item == object) {
+				retIndex = index;
+			}
+		});
+
+		return retIndex;
+	}
+	
+	setActiveDomain(domain) {
+		this.activeDomain = domain;
+	}
+
+	getActiveDomain() {
+		return this.activeDomain;
+	}
+
+	switchDomain(domain) {
+		if (this.previousDomains[this.previousDomains.length-1] === domain)
+			this.previousDomains.pop();
+		else
+			this.previousDomains.push(this.getActiveDomain());
+		this.activeDomain = domain;
+	}
+
+	grantPermission(username, object, permissions) {
+		let objectIndex = this.getObjectIndex(object);
+		let domainIndex = this.getDomainIndex(username);
+		this.matrix[domainIndex][objectIndex+1] = permissions;
 	}
 
 	printMatrix() {
 		console.log(this.matrix);
 	}
 }
-
-let AccessControlMatrix = new Matrix();
-
-AccessControlMatrix.addObject(0);
-AccessControlMatrix.addObject(1);
-AccessControlMatrix.addObject(2);
-AccessControlMatrix.addObject(3);
-
-AccessControlMatrix.addDomain('josue');
-AccessControlMatrix.addDomain('daniel');
-AccessControlMatrix.addDomain('victor');
-AccessControlMatrix.addDomain('jesus');
-AccessControlMatrix.addDomain('alex');
-
-AccessControlMatrix.printMatrix();

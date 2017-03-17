@@ -4,12 +4,12 @@ const babel = require('gulp-babel');
 const concat = require('gulp-concat');
  
 gulp.task('js', () => {
-    return gulp.src('./src/js/*.js')
+    return gulp.src('./src/js/matrix.js')
         .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
         }))
-        .pipe(concat('bundle.js'))
+        .pipe(concat('matrix.js'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist'));
 });
